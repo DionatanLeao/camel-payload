@@ -1,4 +1,4 @@
-package com.camelpayload.dto;
+package com.camel.payload.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Payload {
+public class PayloadRequest {
 	
-	private Long id;
 	private String formCode;
 	private String fileName;
 	private String content;
+	
 }

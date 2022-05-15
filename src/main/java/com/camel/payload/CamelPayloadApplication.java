@@ -1,4 +1,4 @@
-package com.camelpayload;
+package com.camel.payload;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
