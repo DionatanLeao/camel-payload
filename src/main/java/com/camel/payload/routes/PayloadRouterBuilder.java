@@ -1,11 +1,14 @@
 package com.camel.payload.routes;
 
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import com.camel.payload.dto.PayloadRequest;
+import com.camel.payload.service.TokenService;
 
 @Component
 public class PayloadRouterBuilder extends RouteBuilder {
@@ -48,6 +51,15 @@ public class PayloadRouterBuilder extends RouteBuilder {
 			.type(PayloadRequest.class)
 			.route().routeId("save")
 			.outputType(String.class)
+			.process(new Processor() {
+
+				@Override
+				public void process(Exchange exchange) throws Exception {
+					TokenService service = new TokenService();
+					exchange.getMessage().setHeader("token", service.gerarToken());					
+				}
+            	
+            })
 		.to("rest:post:/payloads?bridgeEndpoint=true")
 		
 		.endRest()
