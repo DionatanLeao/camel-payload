@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.camel.payload.dto.PayloadRequest;
 import com.camel.payload.service.TokenService;
+import com.camel.payload.service.impl.TokenServiceImpl;
 
 @Component
 public class PayloadRouterBuilder extends RouteBuilder {
@@ -55,7 +56,7 @@ public class PayloadRouterBuilder extends RouteBuilder {
 
 				@Override
 				public void process(Exchange exchange) throws Exception {
-					TokenService service = new TokenService();
+					TokenService service = new TokenServiceImpl();
 					exchange.getMessage().setHeader("token", service.gerarToken());					
 				}
             	
@@ -70,7 +71,16 @@ public class PayloadRouterBuilder extends RouteBuilder {
 			.produces(MediaType.APPLICATION_JSON_VALUE)	
 			.type(PayloadRequest.class)
 			.route().routeId("update")
-			.outputType(String.class)	
+			.outputType(String.class)
+			.process(new Processor() {
+
+				@Override
+				public void process(Exchange exchange) throws Exception {
+					TokenService service = new TokenServiceImpl();
+					exchange.getMessage().setHeader("token", service.gerarToken());					
+				}
+            	
+            })
 		.to("rest:put:/payloads/{id}?bridgeEndpoint=true")
 		
 		.endRest()
@@ -80,6 +90,15 @@ public class PayloadRouterBuilder extends RouteBuilder {
 			.consumes(MediaType.APPLICATION_JSON_VALUE)
 			.produces(MediaType.APPLICATION_JSON_VALUE)	
 			.route().routeId("delete")
+			.process(new Processor() {
+
+				@Override
+				public void process(Exchange exchange) throws Exception {
+					TokenService service = new TokenServiceImpl();
+					exchange.getMessage().setHeader("token", service.gerarToken());					
+				}
+            	
+            })
 		.to("rest:delete:/payloads/{id}?bridgeEndpoint=true")
 		
 		.endRest();		
