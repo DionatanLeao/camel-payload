@@ -15,5 +15,5 @@ public class PayloadResponse {
 	private String formCode;
 	private String fileName;
 	private String content;
-	private String token;
+
 }
