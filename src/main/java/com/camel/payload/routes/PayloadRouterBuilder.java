@@ -14,21 +14,27 @@ import com.camel.payload.service.impl.TokenServiceImpl;
 @Component
 public class PayloadRouterBuilder extends RouteBuilder {
 
+	private static final String APPLICATION_JSON_VALUE = MediaType.APPLICATION_JSON_VALUE;
+	private static final int PORT = 8081;
+	private static final String HOST = "localhost";
+	private static final RestBindingMode BINDING_MODE = RestBindingMode.json;
+	private static final String COMPONENT = "servlet";
+
 	@Override
 	public void configure() throws Exception {
 		
 		restConfiguration()
-	        .component("servlet")
-	        .bindingMode(RestBindingMode.json)
-	        .host("localhost").port(8081);
+	        .component(COMPONENT)
+	        .bindingMode(BINDING_MODE)
+	        .host(HOST).port(PORT);
 		
 		rest()
         	.path("/integration/payloads")
 
         .get()
-	        .bindingMode(RestBindingMode.json)
-			.consumes(MediaType.APPLICATION_JSON_VALUE)
-			.produces(MediaType.APPLICATION_JSON_VALUE)
+	        .bindingMode(BINDING_MODE)
+			.consumes(APPLICATION_JSON_VALUE)
+			.produces(APPLICATION_JSON_VALUE)
             .route().routeId("findAll")
             .outputType(String.class)
         .to("rest:get:/payloads?bridgeEndpoint=true")
@@ -36,9 +42,10 @@ public class PayloadRouterBuilder extends RouteBuilder {
         .endRest()
 		
 		.get("/{id}")
-			.bindingMode(RestBindingMode.json)
-			.consumes(MediaType.APPLICATION_JSON_VALUE)
-			.produces(MediaType.APPLICATION_JSON_VALUE)
+			.bindingMode(BINDING_MODE)
+			.consumes(APPLICATION_JSON_VALUE)
+			.produces(APPLICATION_JSON_VALUE)
+			//.outType(PayloadResponse.class)
 			.route().routeId("findById")
 			.outputType(String.class)
 		.to("rest:get:/payloads/{id}?bridgeEndpoint=true")
@@ -46,10 +53,11 @@ public class PayloadRouterBuilder extends RouteBuilder {
 		.endRest()		
 		
 		.post()
-			.bindingMode(RestBindingMode.json)
-			.consumes(MediaType.APPLICATION_JSON_VALUE)
-			.produces(MediaType.APPLICATION_JSON_VALUE)
+			.bindingMode(BINDING_MODE)
+			.consumes(APPLICATION_JSON_VALUE)
+			.produces(APPLICATION_JSON_VALUE)
 			.type(PayloadRequest.class)
+			//.outType(PayloadResponse.class)
 			.route().routeId("save")
 			.outputType(String.class)
 			.process(new Processor() {
@@ -66,10 +74,11 @@ public class PayloadRouterBuilder extends RouteBuilder {
 		.endRest()
 		
 		.put("/{id}")
-			.bindingMode(RestBindingMode.json)
-			.consumes(MediaType.APPLICATION_JSON_VALUE)
-			.produces(MediaType.APPLICATION_JSON_VALUE)	
+			.bindingMode(BINDING_MODE)
+			.consumes(APPLICATION_JSON_VALUE)
+			.produces(APPLICATION_JSON_VALUE)	
 			.type(PayloadRequest.class)
+			//.outType(PayloadResponse.class)
 			.route().routeId("update")
 			.outputType(String.class)
 			.process(new Processor() {
@@ -86,9 +95,9 @@ public class PayloadRouterBuilder extends RouteBuilder {
 		.endRest()
 
 		.delete("/{id}")
-			.bindingMode(RestBindingMode.json)
-			.consumes(MediaType.APPLICATION_JSON_VALUE)
-			.produces(MediaType.APPLICATION_JSON_VALUE)	
+			.bindingMode(BINDING_MODE)
+			.consumes(APPLICATION_JSON_VALUE)
+			.produces(APPLICATION_JSON_VALUE)	
 			.route().routeId("delete")
 			.process(new Processor() {
 
